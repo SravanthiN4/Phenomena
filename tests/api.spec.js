@@ -35,7 +35,7 @@ describe('API', () => {
   describe('server', () => {
     beforeAll(async() => {
     })
-    it('Responds to requests', async () => {
+    it.only('Responds to requests', async () => {
       await expect(axios.get(`${API_URL}/foo-bar`)).rejects.toThrow('Request failed with status code 404');
     });
   });

@@ -41,13 +41,13 @@ describe('Database', () => {
         `, [reportIdToClose]);
 
       })
-      it('Returns an object', async () => {
+      it.only('Returns an object', async () => {
         expect(typeof testReport).toBe('object');
       });
-      it('Does NOT return the password', async () => {
+      it.only('Does NOT return the password', async () => {
         expect(testReport.password).toBe(undefined);
       });
-      it('report object contains id, title, location, description, isOpen, expirationDate', async () => {
+      it.only('report object contains id, title, location, description, isOpen, expirationDate', async () => {
         expect(testReport).toEqual(expect.objectContaining({
           id: expect.any(Number),
           title: expect.any(String),
@@ -69,16 +69,16 @@ describe('Database', () => {
         [singleReport] = reports.filter(report => report.id === reportIdToCreate);
         [expiredReport] = reports.filter(report => report.id === reportIdToClose);
       })
-      it('Returns an array', async () => {
+      it.only('Returns an array', async () => {
         expect(Array.isArray(reports)).toBe(true);
       });
-      it('Returns more than one report', async () => {
+      it.only('Returns more than one report', async () => {
         expect(reports.length).toBe(2);
       });
-      it('Array contains objects', async () => {
+      it.only('Array contains objects', async () => {
         expect(typeof singleReport).toBe('object');
       });
-      it('individual report objects contain id, title, location, description, password, isOpen, expirationDate', async () => {
+      it.only('individual report objects contain id, title, location, description, password, isOpen, expirationDate', async () => {
         expect(singleReport).toEqual(expect.objectContaining({
           id: expect.any(Number),
           title: expect.any(String),
@@ -89,13 +89,13 @@ describe('Database', () => {
           isExpired: expect.any(Boolean),
         }));
       });
-      it('isExpired is false if the expirationDate is now or later', async () => {
+      it.only('isExpired is false if the expirationDate is now or later', async () => {
         expect(singleReport.isExpired).toBe(false);
       });
-      it('isExpired is true if the expirationDate is before now', async () => {
+      it.only('isExpired is true if the expirationDate is before now', async () => {
         expect(expiredReport.isExpired).toBe(true);
       });
-      it('individual report objects include the comments', async () => {
+      it.only('individual report objects include the comments', async () => {
         expect(singleReport).toEqual(expect.objectContaining({
           comments: expect.any(Array),
         }));
@@ -108,7 +108,7 @@ describe('Database', () => {
       beforeAll(async() => {
         report = await _getReport(reportIdToCreate);
       })
-      it('SELECTs and returns the report with id equal to reportId', async () => {
+      it.only('SELECTs and returns the report with id equal to reportId', async () => {
         expect(report.id).toEqual(reportIdToCreate);
       });
       
@@ -117,13 +117,13 @@ describe('Database', () => {
       let message, report;
       beforeAll(async() => {
       })
-      it('If report doesnt exist, throws an error with a useful message', async () => {
+      it.only('If report doesnt exist, throws an error with a useful message', async () => {
         await expect(closeReport(300)).rejects.toThrow('Report does not exist with that id');
       });
-      it('If the passwords dont match, throws an error', async () => {
+      it.only('If the passwords dont match, throws an error', async () => {
         await expect(closeReport(reportIdToCreate, 'iLoveNothing')).rejects.toThrow('Password incorrect for this report, please try again');
       });
-      it('If it has already been closed, throws an error with a useful message', async () => {
+      it.only('If it has already been closed, throws an error with a useful message', async () => {
         await client.query(`
           UPDATE reports
           SET "isOpen"='false'
@@ -131,7 +131,7 @@ describe('Database', () => {
         `, [reportIdToClose]);
         await expect(closeReport(reportIdToClose, 'GhostbustersNeeded')).rejects.toThrow('This report has already been closed');
       });
-      it('Finally, updates the report if there are no failures, as above', async () => {
+      it.only('Finally, updates the report if there are no failures, as above', async () => {
         message = await closeReport(reportIdToCreate, 'ShipIsNoMore');
         const {rows} = await client.query(`
         SELECT * FROM reports
@@ -140,7 +140,7 @@ describe('Database', () => {
         [report] = rows;
         expect(report.isOpen).toBe(false);
       });
-      it('Returns a message stating that the report has been closed', async () => {
+      it.only('Returns a message stating that the report has been closed', async () => {
         expect(message).toEqual({message: "Report successfully closed!"});
       });
     })
@@ -157,10 +157,10 @@ describe('Database', () => {
         });
         reportIdForComments = testReportForComments.id;
       })
-      it('if it wasnt found, throw an error saying `That report does not exist, no comment has been made`', async () => {
+      it.only('if it wasnt found, throw an error saying `That report does not exist, no comment has been made`', async () => {
         await expect(createReportComment(500, commentFields)).rejects.toThrow('That report does not exist, no comment has been made');
       });
-      it('if the current date is past the expiration, throw an error saying `The discussion time on this report has expired, no comment has been made`', async () => {
+      it.only('if the current date is past the expiration, throw an error saying `The discussion time on this report has expired, no comment has been made`', async () => {
         await client.query(`
           UPDATE reports
           SET "expirationDate" = CURRENT_TIMESTAMP - interval '1 day'
@@ -175,11 +175,11 @@ describe('Database', () => {
           RETURNING *;
         `, [reportIdForComments]);
       });
-      it('if all is a go, should return the comment', async () => {
+      it.only('if all is a go, should return the comment', async () => {
         const comment = await createReportComment(reportIdForComments, commentFields);
         expect(comment.content).toBe(commentFields.content);
       });
-      it('if it is not open, throw an error saying `That report has been closed, no comment has been made`', async () => {
+      it.only('if it is not open, throw an error saying `That report has been closed, no comment has been made`', async () => {
         await client.query(`
           UPDATE reports
           SET "isOpen"='false'
