@@ -236,6 +236,7 @@ const { content } = commentFields;
   try {
     // grab the report we are going to be commenting on
     const thatReport = await _getReport(reportId);
+    console.log("thatRe",thatReport);
 
     // if it wasn't found, throw an error saying so
     
@@ -268,12 +269,13 @@ const { content } = commentFields;
     `,[reportId,content])
 
     // then update the expiration date to a day from now
-   const updateExpiration =  await client.query(`
+   await client.query(`
     UPDATE reports SET "expirationDate" = CURRENT_TIMESTAMP + interval '1 day' 
     where id = $1 RETURNING *
     `,[reportId])
 
     // finally, return the comment
+    console.log("commentfromReport",comment);
     return comment;
 
   } catch (error) {

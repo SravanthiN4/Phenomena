@@ -26,7 +26,7 @@ const {
 // })
 
  apiRouter.get('/reports',async(req,res,next) => {
-    console.log("Are we getting in here?..")
+    //console.log("Are we getting in here?..")
     try {
 
         const openReports = await getOpenReports();
@@ -120,13 +120,11 @@ apiRouter.post('/reports/:reportId/comments', async(req,res,next) => {
     const commentData = {};
 
     try {
-        commentData.reportId = reportId
-        // commentData.content = content
-        console.log(commentData)
+        commentData.reportId = reportId;
+        console.log("commentdata",commentData);
         const createNewComment = await createReportComment(reportId,req.body)
-        console.log(createNewComment)
-            res.send(createNewComment);
-       
+        console.log("createNew",createNewComment);
+        res.send(createNewComment);
         
         
     } catch ({ name, message }) {
