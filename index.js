@@ -23,17 +23,19 @@ server.use('/api',apiRouter);
 const { client } = require('./db')
 client.connect();
 
+
+
 // Create custom 404 handler that sets the status code to 404.
 server.use((req,res,next) => {
     res.status(404).send('Not found');
-    next(error);
 })
 // Create custom error handling that sets the status code to 500
 // and returns the error as an object
 server.use((error,req,res,next) => {
     res.status(error.status || 500);
-    res.json({
+    res.send({
         error: {
+            name:error.name,
             message:error.message
         }
     })
@@ -44,5 +46,5 @@ server.use((error,req,res,next) => {
 // Start the server listening on port PORT
 // On success, connect to the database
 server.listen(PORT, () => {
-    console.log('The server is up on port',PORT)
-})
+    console.log('The server is up on port', PORT)
+  });

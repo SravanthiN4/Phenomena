@@ -166,7 +166,7 @@ async function closeReport(reportId, password) {
     try {
 
       const thatReport = await _getReport(reportId);
-      console.log("that",thatReport)
+      //console.log("that",thatReport)
        // If it doesn't exist, throw an error with a useful message
       //return report;
 
